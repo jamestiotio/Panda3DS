@@ -59,8 +59,13 @@ void IRUserService::initializeIrnopShared(u32 messagePointer) {
 	MemoryBlock* memoryBlock = object->getData<MemoryBlock>();
 	sharedMemory = *memoryBlock;
 
+	// Clear shared memory status
+	for (int i = 0; i < sizeof(SharedMemoryStatus); i++) {
+		mem.write8(memoryBlock->addr + i, 0);
+	}
 	// Set the initialized byte in shared mem to 1
 	mem.write8(memoryBlock->addr + offsetof(SharedMemoryStatus, isInitialized), 1);
+
 	mem.write64(memoryBlock->addr + 0x10, 0); // Initialize the receive buffer info to all 0s
 	mem.write64(memoryBlock->addr + 0x18, 0);
 
